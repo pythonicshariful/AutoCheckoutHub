@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCheckout Hub - User Manual</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background-color: #f4f7f6; }
+        .container { background: #fff; padding: 50px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        h1 { font-size: 2.5em; color: #111827; border-bottom: 3px solid #6366f1; padding-bottom: 12px; margin-bottom: 24px; font-weight: 800; }
+        h2 { font-size: 1.8em; color: #1f2937; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-top: 48px; font-weight: 700; }
+        h3 { font-size: 1.4em; color: #374151; margin-top: 32px; font-weight: 600; }
+        p { margin-bottom: 18px; font-size: 1.1em; color: #4b5563; }
+        code { background-color: #f3f4f6; padding: 3px 6px; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; color: #ef4444; font-weight: 600; }
+        pre { background-color: #1f2937; color: #f9fafb; padding: 20px; border-radius: 12px; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        pre code { background-color: transparent; padding: 0; color: inherit; font-weight: normal; }
+        a { color: #6366f1; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; color: #4f46e5; }
+        ul, ol { padding-left: 24px; margin-bottom: 20px; color: #4b5563; }
+        li { margin-bottom: 10px; font-size: 1.1em; }
+        hr { border: 0; border-top: 1px solid #e5e7eb; margin: 48px 0; }
+        strong { color: #111827; }
+        em { color: #6b7280; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AutoCheckout Hub - Full User Manual (A to Z)</h1>
+<p>Welcome to your customized AutoCheckout Hub! This system is designed to monitor and automate checkouts for Target, BestBuy, Walmart, and Topps. It features an interactive dashboard, real-time logging, Discord integration for remote control, and a scalable architecture that prevents bot crashes by isolating each task.</p>
+<hr />
+<h2>1. System Requirements &amp; Setup</h2>
+<p>Before running the hub, ensure you have the correct environment set up.</p>
+<h3>Prerequisites</h3>
+<ol>
+<li><strong>Python 3.10+</strong> (Required for the backend and bots).</li>
+<li><strong>Node.js 18+</strong> (Required for the Next.js Dashboard).</li>
+<li><strong>Google Chrome</strong> installed on your Windows machine.</li>
+</ol>
+<h3>Installation Steps</h3>
+<ol>
+<li>
+<p><strong>Install Python Dependencies:</strong>
+   Open a terminal in the <code>backend</code> folder and run:
+   <code>bash
+   pip install fastapi uvicorn sqlalchemy python-dotenv discord.py requests undetected-chromedriver playwright loguru bs4</code>
+   <em>Note: For Walmart to work, you must also install the Playwright browsers by running:</em>
+   <code>bash
+   playwright install chromium</code></p>
+</li>
+<li>
+<p><strong>Install Frontend Dependencies:</strong>
+   Open a terminal in the <code>frontend</code> folder and run:
+   <code>bash
+   npm install</code></p>
+</li>
+</ol>
+<hr />
+<h2>2. Configuring Discord Integration</h2>
+<p>The system uses Discord both to send you live logs and to accept remote commands (like un-pausing bots).</p>
+<h3>Setting up the <code>.env</code> File</h3>
+<p>In your <code>backend</code> folder, there must be a file named <code>.env</code>. If it doesn't exist, create it. It should look like this:</p>
+<pre><code class="language-env"># The webhook URL where the bot will push log messages
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+
+# Your Discord Bot Token (used for reading commands like &quot;enter 10&quot;)
+DISCORD_BOT_TOKEN=MTUwNjU1...
+
+# The specific Channel ID where the bot should listen for your commands
+DISCORD_CHANNEL_ID=1506555386101235865
+</code></pre>
+<h3>Adding the Bot to Your Server (Crucial for receiving commands)</h3>
+<p>To read your commands (like <code>enter 12</code> or <code>stop 12</code>), your actual Discord Application must be invited to your server:
+1. Go to the <a href="https://discord.com/developers/applications">Discord Developer Portal</a> and log in.
+2. Click your bot application. On the left menu, go to <strong>Bot</strong>, scroll down to <strong>Privileged Gateway Intents</strong>, and toggle <strong>ON</strong> the <code>MESSAGE CONTENT INTENT</code>. Save changes.
+3. On the left menu, click <strong>OAuth2</strong> -&gt; <strong>URL Generator</strong>.
+4. Under "Scopes", check <strong><code>bot</code></strong>. Under "Bot Permissions", check <strong><code>Read Messages/View Channels</code></strong> and <strong><code>Send Messages</code></strong>.
+5. Copy the generated URL at the bottom, paste it in a new tab, and Authorize it to join your server.</p>
+<h3>Changing the Discord Settings</h3>
+<p>If you ever want to change the channel or bot token:
+1. Open <code>backend/.env</code>.
+2. Replace <code>DISCORD_WEBHOOK_URL</code> with a new webhook link.
+3. Replace <code>DISCORD_BOT_TOKEN</code> with a new bot token.
+4. Replace <code>DISCORD_CHANNEL_ID</code> with the ID of the new text channel (Right-click a channel in Discord and select "Copy Channel ID").
+5. <strong>Restart the Backend</strong> for changes to take effect.</p>
+<hr />
+<h2>3. Starting the System</h2>
+<p>To use the Hub, you need to start <strong>both</strong> the backend and the frontend.</p>
+<ol>
+<li>
+<p><strong>Start the Backend (API &amp; Bots):</strong>
+   Open a terminal in <code>g:\Personal\fver\fiverr\backend</code> and run:
+   <code>bash
+   python -m uvicorn main:app --reload --port 8000</code>
+   <em>Leave this terminal open in the background.</em></p>
+</li>
+<li>
+<p><strong>Start the Frontend (Dashboard):</strong>
+   Open a new terminal in <code>g:\Personal\fver\fiverr\frontend</code> and run:
+   <code>bash
+   npm run dev</code>
+   <em>Leave this terminal open as well.</em></p>
+</li>
+<li>
+<p><strong>Open the Dashboard:</strong>
+   Open your browser and navigate to <strong>http://localhost:3000</strong>.</p>
+</li>
+</ol>
+<hr />
+<h2>4. Using the Dashboard (A to Z)</h2>
+<p>The dashboard is your centralized command center.</p>
+<h3>Adding a SKU</h3>
+<ol>
+<li>In the <strong>Monitored SKUs</strong> section, type the product SKU (e.g., <code>94681777</code>).</li>
+<li>Select the Site from the dropdown (Target, Walmart, BestBuy, Topps).</li>
+<li>Select the desired Quantity.</li>
+<li>Click <strong>Add</strong>. The SKU will be saved to your local database and appear in the table below.</li>
+</ol>
+<h3>Running a Bot</h3>
+<ol>
+<li>Find the SKU you want to run in the table.</li>
+<li>Click the green <strong>Play (▶)</strong> button under Actions.</li>
+<li>The bot will instantly launch in the background. A physical Google Chrome window will appear on your screen, operating entirely on its own.</li>
+<li><em>Note: You can click Play on multiple SKUs at the same time. The system creates isolated Chrome profiles for every task so they never crash each other.</em></li>
+</ol>
+<h3>Monitoring Progress</h3>
+<ol>
+<li>Watch the <strong>System Logs</strong> section on the bottom right.</li>
+<li>You will see live updates like <code>[INFO] Bot browser starting...</code>, <code>[INFO] Added to cart!</code>, or <code>[SUCCESS] Task Finished</code>.</li>
+</ol>
+<hr />
+<h2>5. Handling Captchas &amp; Logins (Remote Control)</h2>
+<p>Sometimes, bots get blocked by Captchas, or a site like Walmart requires you to log in to proceed. <strong>The bot will not crash.</strong> Instead, it will <strong>Pause</strong>.</p>
+<h3>What happens when a bot pauses?</h3>
+<ul>
+<li>The Dashboard will show the task status in orange as <strong>Paused</strong>.</li>
+<li>The System Logs (and your Discord channel) will warn you: <code>[ERROR] Not logged in</code> or <code>[ERROR] Captcha detected</code>.</li>
+<li>The physical Chrome browser will freeze, allowing you time to solve the issue.</li>
+</ul>
+<h3>How to Resume (Option 1: Dashboard)</h3>
+<ol>
+<li>Go to the open Chrome window and manually solve the Captcha or log into your account.</li>
+<li>Go back to your Dashboard.</li>
+<li>In the <strong>Active Tasks</strong> panel, click the orange <strong>Resume</strong> button next to the paused task.</li>
+<li>The bot will instantly wake up and continue!</li>
+</ol>
+<h3>How to Resume (Option 2: Discord)</h3>
+<p>If you are away from your PC and using a remote desktop viewer on your phone:
+1. You will see a notification in Discord that Task <code>10</code> is paused.
+2. Go to your remote viewer, solve the Captcha on the PC.
+3. In your Discord channel, simply type:
+   <code>text
+   enter 10</code>
+4. The Discord Bot will reply <code>✅ Sent enter keystroke to Task 10</code>, and the bot on your PC will instantly resume checkout!</p>
+<h3>How to Stop a Task</h3>
+<p>If you want to permanently kill a bot (whether it's running or paused):
+- <strong>From Dashboard:</strong> Click the <strong>Red Square (Stop)</strong> button next to the spinning loader icon in the SKU table.
+- <strong>From Discord:</strong> Type <code>stop 10</code> (replace 10 with your Task ID). The bot will securely terminate the process and close the browser.</p>
+<hr />
+<h2>6. Where is the Data Stored?</h2>
+<ul>
+<li><strong>Database:</strong> All tasks, SKUs, and logs are stored locally in <code>backend/checkout.db</code> (a SQLite database).</li>
+<li><strong>Chrome Profiles:</strong> Every time a bot runs, it creates an isolated folder in <code>C:\temp\profile_&lt;task_id&gt;</code>. This stores cookies. If you log into Walmart on Task 5, Task 5 will remember your login forever.</li>
+</ul>
+<hr />
+<h2>7. Troubleshooting</h2>
+<ul>
+<li><strong>"Failed to reach backend"</strong>: Ensure the python <code>uvicorn</code> terminal is still running without errors.</li>
+<li><strong>Bot opens then closes immediately</strong>: The bot likely threw an error before it could even start. Check the <code>backend</code> terminal for raw python tracebacks.</li>
+<li><strong>Playwright errors</strong>: If Walmart fails to start, ensure you ran <code>playwright install chromium</code> in your backend folder.</li>
+</ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+2026-05-20 12:14:59 | INFO     | Browser profile: G:\Personal\fver\New folder\walmart\chrome_profile
+2026-05-20 12:14:59 | INFO     | Step 1 — Opening Walmart & checking login...
+2026-05-20 12:14:59 | DEBUG    | Navigating → https://www.walmart.com
+2026-05-20 12:15:05 | SUCCESS  | ✅ Already logged in (chrome_profile session active)
+2026-05-20 12:15:36 | INFO     | SKU: 14091452016  |  Quantity: 3
+2026-05-20 12:15:36 | INFO     | Step 2 — Searching for SKU: 14091452016
+2026-05-20 12:15:39 | DEBUG    | Typed '14091452016' humanly
+2026-05-20 12:15:40 | INFO     | Pressing Enter to search...
+2026-05-20 12:15:41 | INFO     | Waiting for search results...
+2026-05-20 12:15:53 | WARNING  | Selector '[data-testid="item-stack"]' timed out — checking CAPTCHA [results-[data-testid="item-s]
+2026-05-20 12:15:53 | WARNING  | ⚠️  PerimeterX CAPTCHA detected [results-[data-testid="item-s]!
+2026-05-20 12:15:53 | WARNING  |    👉 Solve the 'Press & Hold' in the browser. Waiting up to 3 min...
+2026-05-20 12:16:05 | SUCCESS  | ✅ CAPTCHA solved! Resuming...
+2026-05-20 12:16:06 | DEBUG    | Results found via selector: [data-testid="item-stack"]
+2026-05-20 12:16:07 | SUCCESS  | First result URL: https://www.walmart.com/ip/Pokemon-Trading-Card-Games-Scarlet-Violet-8-5-Prismatic-Evolutions-Poster-Box/14091452016
+2026-05-20 12:16:08 | DEBUG    | Navigating → https://www.walmart.com/ip/Pokemon-Trading-Card-Games-Scarlet-Violet-8-5-Prismatic-Evolutions-Poster-Box/14091452016
+2026-05-20 12:16:10 | SUCCESS  | ✅ On product page → https://www.walmart.com/ip/Pokemon-Trading-Card-Games-Scarlet-Violet-8-5-Prismatic-Evolutions-Poster-Box/14091452016
+2026-05-20 12:16:10 | SUCCESS  | On product page — qty=3
+2026-05-20 12:16:10 | INFO     | Step 3 — Waiting for 'Buy Now' button...
+2026-05-20 12:16:10 | SUCCESS  | ✅ Buy Now button is available!
+2026-05-20 12:16:12 | INFO     | Clicked Buy Now
+2026-05-20 12:16:12 | INFO     | Waiting for quantity stepper...
+2026-05-20 12:16:14 | INFO     | Setting quantity to 3 (clicking + 2 times)...
+2026-05-20 12:16:14 | DEBUG    |   Quantity now: 2
+2026-05-20 12:16:44 | WARNING  |   Could not click + button: Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"quantity-stepper-inc-button\"]").first
+    - locator resolved to <button type="button" aria-disabled="false" data-dca-intent="select" data-dca-id="B:58F19C15FB" data-dca-event="cartAddition" data-testid="quantity-stepper-inc-button" class="bn br4 pa0 flex justify-center items-center h2 w2 bg-white black pointer hover-bg-gray hover-white" aria-label="Increase quantity Pokemon Scarlet & Violet 8.5 Prismatic Evolutions Poster Collection, Current Quantity 2">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex flex-column w-100 fixed bg-white-70 z-max absolute--fill justify-center items-center">…</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex flex-column w-100 fixed bg-white-70 z-max absolute--fill justify-center items-center">…</div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <div class="flex flex-column w-100 fixed bg-white-70 z-max absolute--fill justify-center items-center">…</div> intercepts pointer events
+  52 × retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is not enabled
+  - retrying click action
+    - waiting 500ms
+
+2026-05-20 12:16:44 | SUCCESS  | ✅ Quantity set to: Max 1
+2026-05-20 12:16:44 | INFO     | Step 4 — Waiting for 'Place order' button...
+2026-05-20 12:16:44 | SUCCESS  | ✅ Place Order button found!
+2026-05-20 12:16:45 | SUCCESS  | 🛒 'Place order' clicked — order submitted!
+2026-05-20 12:16:47 | INFO     | Final URL: https://www.walmart.com/ip/Pokemon-Trading-Card-Games-Scarlet-Violet-8-5-Prismatic-Evolutions-Poster-Box/14091452016

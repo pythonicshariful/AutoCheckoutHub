@@ -1,0 +1,19 @@
+{
+    "contact_info": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "phone": "1234567890",
+        "address": "My Address",
+        "city": "Charlotte",
+        "state": "NC",
+        "zipCode": "28208"
+    },
+    "payment_info": {
+        "cardNumber": "4111111111111111",
+        "expiryDate": "1225",
+        "securityCode": "123",
+        "nameOnCard": "John Doe",
+        "phone": "1234567890"
+    }
+}
