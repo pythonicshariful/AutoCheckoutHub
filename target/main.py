@@ -132,11 +132,34 @@ def load_skus():
 
 
 def is_logged_in(driver):
-    try:
-        driver.find_element(By.XPATH, "//span[text()='Account']")
-        return False
-    except NoSuchElementException:
-        return True
+    # Give it a moment to load and settle
+    time.sleep(2)
+    
+    # We check if any element represents "not logged in" (the Account sign in link)
+    # Target uses a link with id="account-sign-in" or aria-label="Account, sign in" for guests.
+    not_logged_in_selectors = [
+        "a#account-sign-in",
+        "a[data-test='@web/AccountLink'][aria-label*='sign in']",
+        "a[data-test='@web/AccountLink'][aria-label*='Sign in']",
+        "//a[contains(@aria-label, 'sign in')]",
+        "//a[contains(@aria-label, 'Sign in')]",
+        "//span[text()='Account']"
+    ]
+    
+    for selector in not_logged_in_selectors:
+        try:
+            if selector.startswith("//"):
+                driver.find_element(By.XPATH, selector)
+            else:
+                driver.find_element(By.CSS_SELECTOR, selector)
+            print(f"[debug] Detected guest/sign-in element matching: {selector}")
+            return False  # Guest sign-in element found -> Not logged in!
+        except NoSuchElementException:
+            continue
+            
+    # Default to logged in if none of the sign-in/guest elements are found
+    return True
+
 
 
 def js_click(driver, element):
@@ -213,6 +236,27 @@ def main(sku_input, quantity, task_id, chrome_version="auto"):
     driver_instance.set_window_size(1280, 720)
     driver_instance.get(URL)
     time.sleep(2)
+
+    # Check login status and pause if not logged in
+    print("Checking login status...")
+    if not is_logged_in(driver_instance):
+        print("[!] Not logged in. Pausing for manual login...")
+        try:
+            requests.post(f"http://localhost:8000/tasks/{task_id}/log", json={}, params={"message": "Manual login required. Solve it in the browser, then click Resume.", "level": "error"})
+            requests.post(f"http://localhost:8000/tasks/{task_id}/status", params={"status": "paused"})
+        except Exception as e:
+            print(f"Failed to post status/log to backend: {e}")
+            
+        print(">> BROWSER PAUSED <<")
+        print("Please log in to your Target account in the browser window.")
+        input("Press ENTER here to continue bot execution after logging in...")
+        
+        try:
+            requests.post(f"http://localhost:8000/tasks/{task_id}/status", params={"status": "running"})
+        except Exception as e:
+            print(f"Failed to update status to backend: {e}")
+    else:
+        print("[+] Already logged in!")
 
     # Note: Session loading logic would need adjustment to match the dynamic profile directory
     
